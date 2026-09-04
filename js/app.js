@@ -270,7 +270,7 @@ NEXT STEPS
     // Event handlers
     attachEventHandlers() {
         // Login handlers
-        $(document).on('submit', '#loginForm', (e) => {
+        $(document).off('submit', '#loginForm').on('submit', '#loginForm', (e) => {
             e.preventDefault();
             const usernameField = $('#loginUsername');
             const passwordField = $('#loginPassword');
