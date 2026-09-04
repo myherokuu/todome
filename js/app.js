@@ -270,67 +270,82 @@ NEXT STEPS
     // Event handlers
     attachEventHandlers() {
         // Login handlers
-        $('#loginForm').on('submit', (e) => {
+        $(document).on('submit', '#loginForm', (e) => {
             e.preventDefault();
-            const username = $('#loginUsername').val().trim();
-            const password = $('#loginPassword').val();
+            const usernameField = $('#loginUsername');
+            const passwordField = $('#loginPassword');
+
+            if (usernameField.length === 0 || passwordField.length === 0) {
+                alert('Form elements not found. Please refresh the page.');
+                return;
+            }
+
+            const username = usernameField.val() ? usernameField.val().trim() : '';
+            const password = passwordField.val() ? passwordField.val() : '';
+
+            if (!username || !password) {
+                alert('Please enter both username and password.');
+                return;
+            }
+
             if (this.handleLogin(username, password)) {
-                this.init();
+                this.attachEventHandlers();
+                this.showDashboard();
             } else {
                 alert('Invalid credentials. Please try again.\n\nDemo: smh / abcd1234');
-                $('#loginPassword').val('');
-                $('#loginUsername').focus();
+                passwordField.val('');
+                usernameField.focus();
             }
         });
 
         // Logout handler
-        $('#logoutBtn').on('click', (e) => {
+        $(document).off('click', '#logoutBtn').on('click', '#logoutBtn', (e) => {
             e.preventDefault();
             this.handleLogout();
         });
 
         // Dashboard
-        $('#createBoardBtn').on('click', () => this.showCreateBoardModal());
-        $('#confirmCreateBoard').on('click', () => this.createBoard());
+        $(document).off('click', '#createBoardBtn').on('click', '#createBoardBtn', () => this.showCreateBoardModal());
+        $(document).off('click', '#confirmCreateBoard').on('click', '#confirmCreateBoard', () => this.createBoard());
 
         // Template selection
-        $('.template-card').on('click', function() {
+        $(document).off('click', '.template-card').on('click', '.template-card', function() {
             $('.template-card').removeClass('selected');
             $(this).addClass('selected');
             $('#boardTemplate').val($(this).data('template'));
         });
 
         // Board view
-        $('#backBtn').on('click', () => this.showDashboard());
-        $('#meetingModeBtn').on('click', () => this.toggleMeetingMode());
+        $(document).off('click', '#backBtn').on('click', '#backBtn', () => this.showDashboard());
+        $(document).off('click', '#meetingModeBtn').on('click', '#meetingModeBtn', () => this.toggleMeetingMode());
 
         // Tool selection
-        $('.tool-btn').on('click', function() {
+        $(document).off('click', '.tool-btn').on('click', '.tool-btn', function() {
             $('.tool-btn').removeClass('active');
             $(this).addClass('active');
             BooleyBoard.selectedTool = $(this).data('tool');
         });
 
         // Meeting mode navigation
-        $('#exitMeetingBtn').on('click', () => this.exitMeetingMode());
-        $('#prevWorkspace').on('click', () => this.previousWorkspace());
-        $('#nextWorkspace').on('click', () => this.nextWorkspace());
+        $(document).off('click', '#exitMeetingBtn').on('click', '#exitMeetingBtn', () => this.exitMeetingMode());
+        $(document).off('click', '#prevWorkspace').on('click', '#prevWorkspace', () => this.previousWorkspace());
+        $(document).off('click', '#nextWorkspace').on('click', '#nextWorkspace', () => this.nextWorkspace());
 
         // Board card clicks
-        $(document).on('click', '.board-card', function() {
+        $(document).off('click', '.board-card').on('click', '.board-card', function() {
             const boardId = $(this).data('board-id');
             BooleyBoard.openBoard(boardId);
         });
 
         // Favorite button
-        $(document).on('click', '.favorite-btn', function(e) {
+        $(document).off('click', '.favorite-btn').on('click', '.favorite-btn', function(e) {
             e.stopPropagation();
             const boardId = $(this).closest('.board-card').data('board-id');
             BooleyBoard.toggleFavorite(boardId);
         });
 
         // Workspace tabs
-        $(document).on('click', '.workspace-tab', function() {
+        $(document).off('click', '.workspace-tab').on('click', '.workspace-tab', function() {
             const boardId = $(this).data('board-id');
             const workspaceId = $(this).data('workspace-id');
             BooleyBoard.openWorkspace(boardId, workspaceId);
