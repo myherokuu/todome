@@ -1,0 +1,22 @@
+{
+  "defaultUser": {
+    "email": "smh",
+    "password": "abcd1234"
+  },
+  "app": {
+    "name": "Boley Board",
+    "version": "0.1.0",
+    "description": "A modern visual workspace for meetings, brainstorming, and project planning"
+  },
+  "features": {
+    "whiteboard": true,
+    "kanban": true,
+    "checklist": true,
+    "mindmap": true,
+    "meetingNotes": true,
+    "meetingMode": true,
+    "aiAssistant": false,
+    "collaboration": false,
+    "export": false
+  }
+}
