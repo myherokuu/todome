@@ -364,7 +364,7 @@ NEXT STEPS
         $('#dashboard').show();
 
         // Update user display
-        $('#currentUser').text(this.currentUser?.email || 'User');
+        $('#currentUser').text(this.currentUser?.username || 'User');
 
         this.renderBoards();
     },
