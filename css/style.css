@@ -1177,3 +1177,72 @@ body {
 .py-5 {
     padding: 32px 0;
 }
+
+/* Editable Elements */
+[contenteditable="true"] {
+    outline: none;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+[contenteditable="true"]:focus {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 2px;
+    padding: 2px 4px;
+}
+
+.item-title[contenteditable="true"] {
+    cursor: text;
+}
+
+.item-title[contenteditable="true"]:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.kanban-card-title[contenteditable="true"] {
+    cursor: text;
+}
+
+.kanban-card-title[contenteditable="true"]:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.notes-content[contenteditable="true"] {
+    cursor: text;
+    line-height: 1.6;
+    font-size: 14px;
+    background: #fff;
+}
+
+.notes-content[contenteditable="true"]:hover {
+    background: #f0f4ff;
+}
+
+.notes-content[contenteditable="true"]:focus {
+    background: #fff;
+    border: 2px solid #667eea;
+}
+
+/* Delete and Add Buttons */
+.delete-item-btn,
+.delete-card-btn,
+.add-card-btn {
+    transition: all 0.2s ease;
+}
+
+.delete-item-btn:hover,
+.delete-card-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+.add-card-btn:hover {
+    background-color: #667eea !important;
+    color: white !important;
+}
+
+.add-card-btn {
+    width: 100%;
+    margin-top: 8px;
+}

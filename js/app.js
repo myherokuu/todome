@@ -350,6 +350,132 @@ NEXT STEPS
             const workspaceId = $(this).data('workspace-id');
             BooleyBoard.openWorkspace(boardId, workspaceId);
         });
+
+        // Board title edit
+        $(document).off('change', '#boardTitle').on('change', '#boardTitle', (e) => {
+            if (this.currentBoard) {
+                this.currentBoard.title = $(e.target).val();
+                this.currentBoard.updatedAt = new Date();
+                this.saveUserData();
+            }
+        });
+
+        // Delete board
+        $(document).off('click', '#deleteBtn').on('click', '#deleteBtn', () => {
+            if (this.currentBoard && confirm('Delete this board? This cannot be undone.')) {
+                this.boards = this.boards.filter(b => b.id !== this.currentBoard.id);
+                this.saveUserData();
+                this.showDashboard();
+            }
+        });
+
+        // Checklist item checkbox
+        $(document).off('change', '.checklist-item input[type="checkbox"]').on('change', '.checklist-item input[type="checkbox"]', function() {
+            if (!BooleyBoard.currentWorkspace) return;
+            const items = BooleyBoard.currentWorkspace.items || [];
+            const index = $(this).closest('.checklist-item').index();
+            if (items[index]) {
+                items[index].completed = $(this).is(':checked');
+                BooleyBoard.currentBoard.updatedAt = new Date();
+                BooleyBoard.saveUserData();
+            }
+        });
+
+        // Add checklist item
+        $(document).off('click', '#addChecklistBtn').on('click', '#addChecklistBtn', () => {
+            if (!this.currentWorkspace) return;
+            const items = this.currentWorkspace.items || [];
+            items.push({
+                id: this.generateId(),
+                title: 'New item',
+                completed: false,
+                priority: 'medium'
+            });
+            this.currentBoard.updatedAt = new Date();
+            this.saveUserData();
+            this.openWorkspace(this.currentBoard.id, this.currentWorkspace.id);
+        });
+
+        // Delete checklist item
+        $(document).off('click', '.delete-item-btn').on('click', '.delete-item-btn', function() {
+            if (!BooleyBoard.currentWorkspace) return;
+            const items = BooleyBoard.currentWorkspace.items || [];
+            const index = $(this).closest('.checklist-item').index();
+            if (index >= 0) {
+                items.splice(index, 1);
+                BooleyBoard.currentBoard.updatedAt = new Date();
+                BooleyBoard.saveUserData();
+                BooleyBoard.openWorkspace(BooleyBoard.currentBoard.id, BooleyBoard.currentWorkspace.id);
+            }
+        });
+
+        // Edit checklist item title
+        $(document).off('blur', '.item-title').on('blur', '.item-title', function() {
+            if (!BooleyBoard.currentWorkspace) return;
+            const items = BooleyBoard.currentWorkspace.items || [];
+            const index = $(this).closest('.checklist-item').index();
+            if (items[index]) {
+                items[index].title = $(this).text();
+                BooleyBoard.currentBoard.updatedAt = new Date();
+                BooleyBoard.saveUserData();
+            }
+        });
+
+        // Add kanban card
+        $(document).off('click', '.add-card-btn').on('click', '.add-card-btn', function() {
+            if (!BooleyBoard.currentWorkspace) return;
+            const colIndex = $(this).closest('.kanban-column').index();
+            const columns = BooleyBoard.currentWorkspace.columns || [];
+            if (columns[colIndex]) {
+                columns[colIndex].cards = columns[colIndex].cards || [];
+                columns[colIndex].cards.push({
+                    id: BooleyBoard.generateId(),
+                    title: 'New task',
+                    priority: 'medium',
+                    assignee: '',
+                    dueDate: ''
+                });
+                BooleyBoard.currentBoard.updatedAt = new Date();
+                BooleyBoard.saveUserData();
+                BooleyBoard.openWorkspace(BooleyBoard.currentBoard.id, BooleyBoard.currentWorkspace.id);
+            }
+        });
+
+        // Delete kanban card
+        $(document).off('click', '.delete-card-btn').on('click', '.delete-card-btn', function() {
+            if (!BooleyBoard.currentWorkspace) return;
+            const colIndex = $(this).closest('.kanban-column').index();
+            const cardIndex = $(this).closest('.kanban-card').index();
+            const columns = BooleyBoard.currentWorkspace.columns || [];
+            if (columns[colIndex] && columns[colIndex].cards) {
+                columns[colIndex].cards.splice(cardIndex, 1);
+                BooleyBoard.currentBoard.updatedAt = new Date();
+                BooleyBoard.saveUserData();
+                BooleyBoard.openWorkspace(BooleyBoard.currentBoard.id, BooleyBoard.currentWorkspace.id);
+            }
+        });
+
+        // Edit meeting notes
+        $(document).off('blur', '.notes-content').on('blur', '.notes-content', function() {
+            if (BooleyBoard.currentWorkspace && BooleyBoard.currentWorkspace.type === 'meeting') {
+                BooleyBoard.currentWorkspace.content = $(this).html();
+                BooleyBoard.currentBoard.updatedAt = new Date();
+                BooleyBoard.saveUserData();
+            }
+        });
+
+        // Edit kanban card title
+        $(document).off('blur', '.kanban-card-title').on('blur', '.kanban-card-title', function() {
+            if (!BooleyBoard.currentWorkspace) return;
+            const colIndex = $(this).closest('.kanban-column').index();
+            const cardIndex = $(this).closest('.kanban-card').index();
+            const columns = BooleyBoard.currentWorkspace.columns || [];
+            if (columns[colIndex] && columns[colIndex].cards && columns[colIndex].cards[cardIndex]) {
+                columns[colIndex].cards[cardIndex].title = $(this).text();
+                BooleyBoard.currentBoard.updatedAt = new Date();
+                BooleyBoard.saveUserData();
+            }
+        });
     },
 
     // Dashboard view
@@ -472,7 +598,7 @@ NEXT STEPS
     renderMeetingContent(workspace) {
         return `
             <div class="meeting-notes">
-                <div class="notes-content">${workspace.content || ''}</div>
+                <div class="notes-content" contenteditable="true" spellcheck="false" style="min-height: 300px; padding: 15px; background: #f8f9fa; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word;">${workspace.content || 'Click to edit meeting notes...'}</div>
             </div>
         `;
     },
@@ -485,7 +611,12 @@ NEXT STEPS
         let html = `
             <div class="checklist-container">
                 <div class="checklist-header">
-                    <h3>${workspace.title}</h3>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h3>${workspace.title}</h3>
+                        <button class="btn btn-sm btn-primary" id="addChecklistBtn">
+                            <i class="fas fa-plus"></i> Add Item
+                        </button>
+                    </div>
                     <p class="mb-2">${completed} of ${items.length} completed</p>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${progress}%"></div>
@@ -501,11 +632,14 @@ NEXT STEPS
                 <div class="checklist-item ${cls}">
                     <input type="checkbox" ${item.completed ? 'checked' : ''}>
                     <div class="item-content">
-                        <div class="item-title">${item.title}</div>
+                        <div class="item-title" contenteditable="true" spellcheck="false">${item.title}</div>
                         <div class="item-meta">
                             ${item.priority ? `<span class="priority-badge ${priorityClass}">${item.priority}</span>` : ''}
                         </div>
                     </div>
+                    <button class="btn btn-sm btn-link delete-item-btn" style="text-decoration: none;">
+                        <i class="fas fa-trash text-danger"></i>
+                    </button>
                 </div>
             `;
         });
@@ -523,7 +657,7 @@ NEXT STEPS
             html += `
                 <div class="kanban-column">
                     <div class="column-header">
-                        ${col.title}
+                        <div>${col.title}</div>
                         <span class="badge bg-secondary ms-2">${(col.cards || []).length}</span>
                     </div>
                     <div class="column-cards">
@@ -533,7 +667,12 @@ NEXT STEPS
                 const priorityClass = `priority-${card.priority}`;
                 html += `
                     <div class="kanban-card ${priorityClass}">
-                        <div class="kanban-card-title">${card.title}</div>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="kanban-card-title flex-grow-1" contenteditable="true" spellcheck="false">${card.title}</div>
+                            <button class="btn btn-sm btn-link delete-card-btn" style="text-decoration: none; padding: 0;">
+                                <i class="fas fa-times text-danger"></i>
+                            </button>
+                        </div>
                         <div class="kanban-card-meta">
                             ${card.assignee ? `<span>${card.assignee}</span>` : ''}
                             ${card.dueDate ? `<span>${this.formatDate(card.dueDate)}</span>` : ''}
@@ -542,7 +681,11 @@ NEXT STEPS
                 `;
             });
 
-            html += `</div></div>`;
+            html += `
+                    <button class="btn btn-sm btn-outline-secondary w-100 mt-2 add-card-btn">
+                    <i class="fas fa-plus"></i> Add Card
+                </button>
+                </div></div>`;
         });
 
         html += '</div>';
