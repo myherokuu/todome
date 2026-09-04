@@ -49,11 +49,13 @@ boley-board/
 #### Option A: Simple (Recommended)
 1. Go to **Settings → Pages**
 2. Select: **Deploy from a branch**
-3. Branch: **main**
+3. Branch: `claude/boley-board-app-om9tgw` (this is the branch Pages has actually been
+   building from — confirmed via the repo's Actions history. `main` is kept in sync
+   with it but isn't the configured Pages source.)
 4. Folder: **/ (root)**
 5. Click **Save**
-6. Visit: `https://myherokuu.github.io/todome/` (may take 1-2 minutes to update)
-7. Hard refresh your browser (Ctrl+Shift+R or Cmd+Shift+R) to see changes
+6. Visit: `https://myherokuu.github.io/todome/` (deploys within ~1 minute of a push)
+7. Hard refresh your browser (Ctrl+Shift+R or Cmd+Shift+R) to bypass any cached copy
 
 #### Option B: Custom Domain
 Configure your DNS to point to GitHub Pages and update repository settings.

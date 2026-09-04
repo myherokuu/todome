@@ -18,6 +18,19 @@ const BooleyBoard = {
     wbDrag: null,
     selectedElementId: null,
 
+    // Extract page coordinates from either a mouse or touch event so every
+    // whiteboard drag handler works the same on desktop and touchscreens
+    eventPoint(e) {
+        const oe = e.originalEvent || e;
+        if (oe.touches && oe.touches.length > 0) {
+            return { pageX: oe.touches[0].pageX, pageY: oe.touches[0].pageY };
+        }
+        if (oe.changedTouches && oe.changedTouches.length > 0) {
+            return { pageX: oe.changedTouches[0].pageX, pageY: oe.changedTouches[0].pageY };
+        }
+        return { pageX: e.pageX, pageY: e.pageY };
+    },
+
     // Escape user-supplied text before injecting into HTML strings
     escapeHtml(str) {
         return String(str ?? '').replace(/[&<>"']/g, ch => ({
@@ -506,8 +519,8 @@ NEXT STEPS
             }
         });
 
-        // Whiteboard: start placing/drawing on the canvas
-        $(document).off('mousedown', '#whiteboardCanvas').on('mousedown', '#whiteboardCanvas', function(e) {
+        // Whiteboard: start placing/drawing on the canvas (mouse + touch)
+        $(document).off('mousedown touchstart', '#whiteboardCanvas').on('mousedown touchstart', '#whiteboardCanvas', function(e) {
             if ($(e.target).closest('.wb-element, .wb-delete-btn, .wb-svg-el').length) return;
 
             BooleyBoard.deselectWhiteboardElement();
@@ -515,9 +528,11 @@ NEXT STEPS
             const tool = BooleyBoard.selectedTool;
             if (tool === 'select') return;
 
+            e.preventDefault();
+            const pt = BooleyBoard.eventPoint(e);
             const offset = $(this).offset();
-            const x = e.pageX - offset.left;
-            const y = e.pageY - offset.top;
+            const x = pt.pageX - offset.left;
+            const y = pt.pageY - offset.top;
 
             if (tool === 'sticky' || tool === 'text') {
                 BooleyBoard.addWhiteboardElement({
@@ -533,21 +548,22 @@ NEXT STEPS
 
             if (['rectangle', 'circle', 'arrow', 'pen'].includes(tool)) {
                 BooleyBoard.wbDrag = { tool, startX: x, startY: y, points: [{ x, y }] };
-                e.preventDefault();
             }
         });
 
-        // Whiteboard: track drag for shapes/pen/arrow
-        $(document).off('mousemove.wb').on('mousemove.wb', function(e) {
+        // Whiteboard: track drag for shapes/pen/arrow (mouse + touch)
+        $(document).off('mousemove.wb touchmove.wb').on('mousemove.wb touchmove.wb', function(e) {
             if (!BooleyBoard.wbDrag) return;
             const $canvas = $('#whiteboardCanvas');
             if ($canvas.length === 0) { BooleyBoard.wbDrag = null; return; }
+            e.preventDefault();
+            const pt = BooleyBoard.eventPoint(e);
             const offset = $canvas.offset();
-            BooleyBoard.updateWbDragPreview(e.pageX - offset.left, e.pageY - offset.top);
+            BooleyBoard.updateWbDragPreview(pt.pageX - offset.left, pt.pageY - offset.top);
         });
 
-        // Whiteboard: finish drag and commit the new element
-        $(document).off('mouseup.wb').on('mouseup.wb', function(e) {
+        // Whiteboard: finish drag and commit the new element (mouse + touch)
+        $(document).off('mouseup.wb touchend.wb touchcancel.wb').on('mouseup.wb touchend.wb touchcancel.wb', function(e) {
             if (!BooleyBoard.wbDrag) return;
             const drag = BooleyBoard.wbDrag;
             BooleyBoard.wbDrag = null;
@@ -555,9 +571,10 @@ NEXT STEPS
 
             const $canvas = $('#whiteboardCanvas');
             if ($canvas.length === 0) return;
+            const pt = BooleyBoard.eventPoint(e);
             const offset = $canvas.offset();
-            const x = e.pageX - offset.left;
-            const y = e.pageY - offset.top;
+            const x = pt.pageX - offset.left;
+            const y = pt.pageY - offset.top;
 
             if (drag.tool === 'pen') {
                 if (drag.points.length > 1) {
@@ -585,15 +602,15 @@ NEXT STEPS
             });
         });
 
-        // Whiteboard: select and drag-move an existing element
-        $(document).off('mousedown', '.wb-element').on('mousedown', '.wb-element', function(e) {
+        // Whiteboard: select and drag-move an existing element (mouse + touch)
+        $(document).off('mousedown touchstart', '.wb-element').on('mousedown touchstart', '.wb-element', function(e) {
             if (BooleyBoard.selectedTool !== 'select') return;
             if ($(e.target).closest('.wb-delete-btn').length) return;
 
             const id = $(this).data('el-id');
             BooleyBoard.selectWhiteboardElement(id);
 
-            // Clicking into the editable text should just place the cursor, not start a drag
+            // Tapping into the editable text should just place the cursor, not start a drag
             if ($(e.target).closest('.wb-text').length) return;
 
             e.preventDefault();
@@ -601,22 +618,24 @@ NEXT STEPS
 
             const el = BooleyBoard.getWhiteboardElement(id);
             if (!el) return;
-            const startMouseX = e.pageX, startMouseY = e.pageY;
+            const startPt = BooleyBoard.eventPoint(e);
             const startElX = el.x, startElY = el.y;
             let moved = false;
 
-            $(document).on('mousemove.wbmove', function(ev) {
-                const dx = ev.pageX - startMouseX;
-                const dy = ev.pageY - startMouseY;
+            $(document).on('mousemove.wbmove touchmove.wbmove', function(ev) {
+                const movePt = BooleyBoard.eventPoint(ev);
+                const dx = movePt.pageX - startPt.pageX;
+                const dy = movePt.pageY - startPt.pageY;
                 if (!moved && (Math.abs(dx) > 2 || Math.abs(dy) > 2)) moved = true;
                 if (moved) {
+                    ev.preventDefault();
                     el.x = startElX + dx;
                     el.y = startElY + dy;
                     $(`.wb-element[data-el-id="${id}"]`).css({ left: el.x + 'px', top: el.y + 'px' });
                 }
             });
-            $(document).on('mouseup.wbmove', function() {
-                $(document).off('mousemove.wbmove mouseup.wbmove');
+            $(document).on('mouseup.wbmove touchend.wbmove touchcancel.wbmove', function() {
+                $(document).off('mousemove.wbmove touchmove.wbmove mouseup.wbmove touchend.wbmove touchcancel.wbmove');
                 if (moved) {
                     BooleyBoard.currentBoard.updatedAt = new Date();
                     BooleyBoard.saveUserData();
