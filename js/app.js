@@ -38,15 +38,52 @@ const BooleyBoard = {
         }[ch]));
     },
 
-    // Initialize app
+    // In-memory fallback store, used when sessionStorage is unavailable or
+    // throws (private browsing, locked-down "kiosk" tablets, some embedded
+    // webviews). Without this, a single storage exception during init()
+    // would abort before event handlers ever got attached, making every
+    // feature in the app look dead with no visible error.
+    memoryStore: {},
+
+    storageGet(key) {
+        try {
+            return sessionStorage.getItem(key);
+        } catch (e) {
+            return Object.prototype.hasOwnProperty.call(this.memoryStore, key) ? this.memoryStore[key] : null;
+        }
+    },
+
+    storageSet(key, value) {
+        try {
+            sessionStorage.setItem(key, value);
+        } catch (e) {
+            this.memoryStore[key] = value;
+        }
+    },
+
+    storageRemove(key) {
+        try {
+            sessionStorage.removeItem(key);
+        } catch (e) {
+            delete this.memoryStore[key];
+        }
+    },
+
+    // Initialize app. Event handlers are attached unconditionally, before
+    // touching storage or session state, so a storage failure can never
+    // leave the whole UI unresponsive.
     init() {
-        this.checkSession();
         this.attachEventHandlers();
+        try {
+            this.checkSession();
+        } catch (e) {
+            this.showLoginPage();
+        }
     },
 
     // Check if user is logged in
     checkSession() {
-        const storedUser = sessionStorage.getItem('boley_user');
+        const storedUser = this.storageGet('boley_user');
         if (storedUser) {
             this.currentUser = JSON.parse(storedUser);
             this.loadUserData();
@@ -68,7 +105,7 @@ const BooleyBoard = {
     handleLogin(username, password) {
         if (this.validUsers[username] && this.validUsers[username] === password) {
             this.currentUser = { username, name: username };
-            sessionStorage.setItem('boley_user', JSON.stringify(this.currentUser));
+            this.storageSet('boley_user', JSON.stringify(this.currentUser));
             this.loadUserData();
             this.showDashboard();
             return true;
@@ -84,9 +121,9 @@ const BooleyBoard = {
             this.currentBoard = null;
             this.currentWorkspace = null;
             this.boards = [];
-            sessionStorage.removeItem('boley_user');
+            this.storageRemove('boley_user');
             if (username) {
-                sessionStorage.removeItem('boley_boards_' + username);
+                this.storageRemove('boley_boards_' + username);
             }
             $('#loginView').show();
             $('#dashboard').hide();
@@ -99,7 +136,7 @@ const BooleyBoard = {
     // Load user-specific data
     loadUserData() {
         const key = 'boley_boards_' + this.currentUser.username;
-        const stored = sessionStorage.getItem(key);
+        const stored = this.storageGet(key);
         if (stored) {
             this.boards = JSON.parse(stored);
         } else {
@@ -111,7 +148,7 @@ const BooleyBoard = {
     // Save user data to session storage
     saveUserData() {
         const key = 'boley_boards_' + this.currentUser.username;
-        sessionStorage.setItem(key, JSON.stringify(this.boards));
+        this.storageSet(key, JSON.stringify(this.boards));
     },
 
     // Mock data
@@ -1300,7 +1337,13 @@ NEXT STEPS
     }
 };
 
-// Initialize when ready
+// Initialize when ready. Wrapped so a single unexpected error surfaces
+// visibly instead of leaving every tap/click silently doing nothing.
 $(document).ready(() => {
-    BooleyBoard.init();
+    try {
+        BooleyBoard.init();
+    } catch (e) {
+        console.error('Boley Board failed to start:', e);
+        alert('Boley Board hit a startup error and needs a reload: ' + e.message);
+    }
 });
