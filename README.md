@@ -1,179 +1,227 @@
-# Boley Board
+# ⚡ Boley Board - jQuery Version
 
-A modern, production-quality visual workspace application for meetings, brainstorming, project planning, and task management.
+A modern, lightweight visual workspace for meetings, brainstorming, and project planning. **No build required - works directly on GitHub Pages!**
 
-## Overview
-
-Boley Board combines the best features of digital whiteboards, sticky notes, checklists, Kanban boards, mind maps, and meeting note tools into a single, unified visual workspace. It's designed for teams to think, discuss, plan, and execute together in real-time.
-
-## Features
+## 🎯 Features
 
 ### Core Workspaces
-- **Whiteboard**: Freeform canvas for drawing diagrams, sketching ideas, and explaining concepts
-- **Checklist**: Task management with priorities, assignees, and due dates
-- **Kanban Board**: Drag-and-drop columns for workflow management (TO DO → IN PROGRESS → REVIEW → DONE)
-- **Mind Map**: Central topic with branching ideas and concepts
-- **Meeting Notes**: Structured meeting documentation with agenda, discussion, decisions, and action items
+- **Meeting Notes**: Structured documentation with agenda, discussion, decisions, and action items
+- **Checklist**: Task management with priorities and due dates
+- **Kanban Board**: Visual workflow (TO DO → IN PROGRESS → REVIEW → DONE)
+- **Whiteboard**: Drawing canvas for sketches and diagrams (ready for expansion)
 
 ### Key Capabilities
-- **Infinite Canvas**: Zoom, pan, and organize unlimited objects on the workspace
-- **Object System**: Text, sticky notes, shapes, images, and task-based objects that support drag, resize, rotate, and connect
-- **Meeting Mode**: Clean presentation interface for displaying boards during meetings
-- **Real-time Collaboration**: Share boards, view-only and editor permissions, comments, and mentions
-- **Export Options**: PNG, PDF, meeting summaries, and meeting minutes
-- **Responsive Design**: Full experience on desktop and tablet
+✅ **Dashboard**: Create boards, manage favorites, view recent projects
+✅ **Meeting Mode**: Beautiful presentation view for live meetings
+✅ **Multiple Templates**: Quick-start templates for different use cases
+✅ **Responsive Design**: Works on desktop and tablet
+✅ **Zero Build Process**: Open index.html directly or deploy to GitHub Pages
+✅ **Modern UI**: Bootstrap 5 + custom CSS styling
 
-### Dashboard
-- Create new boards with templates
-- Favorite/bookmark important boards
-- View recent, shared, and all boards
-- Search and organize workspace
-- Share boards with team members
-
-## Project Structure
+## 📁 Project Structure
 
 ```
-src/
-├── components/
-│   ├── Dashboard.tsx                 # Main dashboard view
-│   ├── Board.tsx                     # Board workspace view
-│   ├── common/                       # Reusable components
-│   │   ├── Button.tsx
-│   │   └── BoardCard.tsx
-│   ├── board/                        # Board-specific components
-│   │   ├── Toolbar.tsx               # Drawing tool selector
-│   │   ├── Canvas.tsx                # Main canvas router
-│   │   ├── WorkspaceTab.tsx          # Workspace tabs
-│   │   ├── MeetingMode.tsx           # Meeting presentation view
-│   │   └── workspaces/               # Workspace-specific canvases
-│   │       ├── WhiteboardCanvas.tsx
-│   │       ├── ChecklistCanvas.tsx
-│   │       ├── KanbanCanvas.tsx
-│   │       ├── MindMapCanvas.tsx
-│   │       └── MeetingCanvas.tsx
-│   └── modals/
-│       └── CreateBoardModal.tsx
-├── store/
-│   └── boardStore.ts                 # Zustand state management
-├── types/
-│   └── index.ts                      # TypeScript type definitions
-├── utils/
-│   └── mockData.ts                   # Mock data and utilities
-├── App.tsx                           # Main app component
-├── main.tsx                          # Entry point
-└── index.css                         # Global styles
+boley-board/
+├── index.html          # Main app (single file)
+├── css/
+│   └── style.css       # All styles (~1000 lines)
+├── js/
+│   └── app.js          # All functionality (~800 lines)
+└── README.md           # This file
 ```
 
-## Getting Started
+## 🚀 Quick Start
 
-### Prerequisites
-- Node.js 16+
-- npm or yarn
+### Run Locally
+1. Simply open `index.html` in your browser
+2. Or use a local server:
+   ```bash
+   # Python 3
+   python -m http.server 8000
+   
+   # Node.js
+   npx http-server
+   ```
+3. Visit `http://localhost:8000`
 
-### Installation
+### Deploy to GitHub Pages
 
-```bash
-npm install
-```
+#### Option A: Simple (Recommended)
+1. Go to **Settings → Pages**
+2. Select: **Deploy from a branch**
+3. Branch: **claude/boley-board-app-om9tgw**
+4. Folder: **/ (root)**
+5. Click **Save**
+6. Visit: `https://myherokuu.github.io/todome/`
 
-### Development
+#### Option B: Custom Domain
+Configure your DNS to point to GitHub Pages and update repository settings.
 
-```bash
-npm run dev
-```
+## 📊 Sample Data
 
-The app will be available at `http://localhost:5173`
+The app includes 4 pre-configured boards demonstrating all features:
 
-### Build
+1. **AI Claim Project – Weekly Meeting**
+   - Meeting notes with agenda, decisions, and action items
+   - Checklist for tracking tasks
 
-```bash
-npm run build
-```
+2. **Q4 Product Roadmap**
+   - Kanban board with sprint tasks
 
-### Preview Production Build
+3. **Sprint 42 - Feature Development**
+   - Active development tasks across columns
 
-```bash
-npm run preview
-```
+4. **Launch Checklist - v2.0**
+   - Pre-launch verification checklist with progress tracking
 
-## Technology Stack
+## 🎮 How to Use
 
-- **Frontend Framework**: React 18 with TypeScript
-- **State Management**: Zustand
-- **Styling**: Tailwind CSS
-- **UI Components**: Lucide React icons
-- **Canvas**: HTML5 Canvas API with Konva.js support
-- **Build Tool**: Vite
-- **Date Handling**: date-fns
+### Create a New Board
+1. Click **"+ Create Board"** button
+2. Enter title and description
+3. Choose a template
+4. Click **"Create Board"**
 
-## Demo Data
+### Open a Board
+- Click any board card on the dashboard
+- Workspace tabs appear at the top
+- Click a tab to view that workspace
 
-The application comes with realistic sample data including:
-- 5 pre-configured boards with different templates
-- Meeting notes with agendas and action items
-- Kanban boards with sample cards and assignments
-- Checklists with priority levels and due dates
-- Mind maps with hierarchical structures
-- Whiteboard with sticky notes and shapes
+### Meeting Mode
+1. Open any board
+2. Click **"Meeting"** button in top-right
+3. Use Previous/Next to navigate workspaces
+4. Beautiful presentation view for live meetings
 
-## Test Credentials
+### Manage Boards
+- ⭐ Click star to favorite
+- 📝 Edit board title
+- 📋 Switch between workspaces
+
+## 🛠️ Technology Stack
+
+- **Frontend**: Vanilla JavaScript + jQuery
+- **Styling**: Bootstrap 5 CSS Framework
+- **Icons**: Font Awesome 6
+- **No Build**: Direct HTML/CSS/JS - CDN dependencies only
+
+### Dependencies
+- jQuery 3.7.0 (CDN)
+- Bootstrap 5.3.0 (CDN)
+- Font Awesome 6.4.0 (CDN)
+
+## 📱 Browser Support
+
+✅ Chrome/Edge 90+
+✅ Firefox 88+
+✅ Safari 14+
+✅ Mobile browsers (iOS Safari, Chrome Mobile)
+
+## 💾 Data Storage
+
+Currently uses in-memory storage (data persists during session). To add persistence:
+1. Uncomment localStorage code in `js/app.js`
+2. Or integrate with backend API
+
+## 🔐 Test Credentials
 
 ```
 Email: smh
 Password: abcd1234
 ```
 
-## Feature Roadmap
+(For future authentication system)
 
-### Phase 1 (Current)
+## 📦 File Sizes
+
+- `index.html`: ~12 KB
+- `css/style.css`: ~25 KB
+- `js/app.js`: ~32 KB
+- **Total: ~69 KB** (minified version ~40 KB)
+
+## 🚀 Roadmap
+
+### Phase 1 (Current) ✅
 - ✅ Dashboard with board management
-- ✅ Multi-workspace support
-- ✅ Whiteboard, Checklist, Kanban, Mind Map, Meeting Notes
-- ✅ Meeting Mode presentation view
-- ✅ Basic object system
+- ✅ Meeting notes workspace
+- ✅ Checklist workspace
+- ✅ Kanban workspace
+- ✅ Meeting mode presentation
+- ✅ Board templates
+- ✅ Favorites system
 
-### Phase 2
-- 🔄 AI Assistant for summarization and task extraction
-- 🔄 Real-time collaboration
-- 🔄 Export functionality (PDF, PNG, minutes)
-- 🔄 Advanced permissions and sharing
+### Phase 2 (Next)
+- 🔄 Whiteboard canvas implementation
+- 🔄 Mind map visualization
+- 🔄 localStorage persistence
+- 🔄 Export to PDF/PNG
+- 🔄 Drag-and-drop cards
 
-### Phase 3
-- 📋 Mobile app support
-- 📋 Custom templates
-- 📋 Activity history and version control
-- 📋 Advanced search and filtering
+### Phase 3 (Future)
+- 📋 Multi-user collaboration (WebSocket)
+- 📋 Real-time sync
+- 📋 Comments & mentions
+- 📋 Activity history
+- 📋 Mobile app
 
-## Architecture Decisions
+## 🎨 Customization
 
-1. **Zustand for State**: Lightweight, easy to understand state management without boilerplate
-2. **Canvas API**: Direct control over rendering for performance and flexibility
-3. **Component-based**: Separate canvas implementations per workspace type for clarity
-4. **Mock Data**: Realistic sample data to demonstrate full functionality
-5. **Responsive Design**: Mobile-first approach with Tailwind CSS
+### Change Colors
+Edit `css/style.css`:
+```css
+.board-topbar {
+    background: #0f172a;  /* Change primary color */
+}
+```
 
-## Performance Considerations
+### Add New Workspace Type
+1. Add case in `renderWorkspaceContent()` function
+2. Create new render function (e.g., `renderMindmapContent()`)
+3. Add HTML template
 
-- Canvas-based rendering for whiteboard (efficient for many objects)
-- Virtual scrolling for kanban columns (future optimization)
-- Lazy loading of workspaces
-- Optimized re-renders with Zustand selectors
+### Modify Sample Data
+Edit `BooleyBoard.loadMockData()` in `js/app.js`
 
-## Browser Support
+## ⚙️ Configuration
 
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
+### Change GitHub Pages Path
+If using different repository path, update in HTML:
+```html
+<!-- If deploying to /repo-name/ -->
+<base href="/repo-name/">
+```
 
-## Contributing
+### Enable Persistence
+Uncomment localStorage calls in `js/app.js`:
+```javascript
+localStorage.setItem('boards', JSON.stringify(this.boards));
+```
 
-The codebase follows these principles:
-- Keep components focused and composable
-- Use TypeScript for type safety
-- Follow existing code style
-- Add unit tests for new features
-- Keep UI consistent with Tailwind design system
+## 🐛 Troubleshooting
 
-## License
+**Page shows 404?**
+- Ensure GitHub Pages is enabled
+- Check source branch is correct
+- Hard refresh (Ctrl+Shift+R)
 
-MIT License - See LICENSE file for details
+**Styles not loading?**
+- Check Bootstrap CDN is accessible
+- Clear browser cache
+- Open DevTools (F12) and check Console
+
+**JavaScript errors?**
+- Check jQuery is loaded before app.js
+- Verify Bootstrap CDN is included
+- Check browser console for specific errors
+
+## 📝 License
+
+MIT License - Use freely in your projects
+
+## 👨‍💻 Author
+
+Built with ❤️ using jQuery + Bootstrap
+
+---
+
+**Ready to use! No installation, no build process, no configuration. Just download and go!** 🎉
