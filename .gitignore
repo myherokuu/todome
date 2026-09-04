@@ -5,7 +5,7 @@ yarn.lock
 pnpm-lock.yaml
 
 # Build outputs
-dist/
+# dist/  # Uncomment to exclude dist; keep commented for GitHub Pages deployment
 build/
 .tsbuildinfo
 
