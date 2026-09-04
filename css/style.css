@@ -277,10 +277,129 @@ body {
 
 /* Whiteboard Canvas */
 .whiteboard-canvas {
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+    height: 1400px;
+    background: #0f172a;
+    background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 20px 20px;
+    cursor: default;
+    user-select: none;
+}
+
+.whiteboard-canvas.tool-select { cursor: default; }
+.whiteboard-canvas.tool-pen,
+.whiteboard-canvas.tool-rectangle,
+.whiteboard-canvas.tool-circle,
+.whiteboard-canvas.tool-arrow { cursor: crosshair; }
+.whiteboard-canvas.tool-sticky,
+.whiteboard-canvas.tool-text { cursor: copy; }
+
+.wb-svg-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: #0f172a;
-    cursor: crosshair;
+    pointer-events: none;
+}
+
+.wb-svg-layer .wb-svg-el {
+    pointer-events: stroke;
+    cursor: pointer;
+}
+
+.wb-empty-hint {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 80%;
+    pointer-events: none;
+}
+
+.wb-element {
+    position: absolute;
+    box-sizing: border-box;
+    user-select: text;
+}
+
+.wb-element.selected {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+.wb-sticky {
+    background: #fef08a;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    border-radius: 4px;
+    padding: 10px;
+    color: #1e293b;
+    font-size: 0.875rem;
+    overflow: auto;
+    cursor: move;
+}
+
+.wb-text-box {
+    color: #f1f5f9;
+    font-size: 1rem;
+    padding: 4px;
+    cursor: move;
+}
+
+.wb-shape-rect {
+    background: rgba(59, 130, 246, 0.15);
+    border: 2px solid #3b82f6;
+    border-radius: 4px;
+    cursor: move;
+}
+
+.wb-shape-circle {
+    background: rgba(59, 130, 246, 0.15);
+    border: 2px solid #3b82f6;
+    border-radius: 50%;
+    cursor: move;
+}
+
+.wb-preview {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px dashed rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+}
+.wb-preview.wb-shape-circle {
+    border-radius: 50%;
+}
+
+.wb-text {
+    outline: none;
+    min-height: 1.2em;
+    cursor: text;
+}
+
+.wb-delete-btn {
+    display: none;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: #fff;
+    border: 2px solid #0f172a;
+    font-size: 11px;
+    line-height: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+}
+
+.wb-element.selected .wb-delete-btn {
+    display: flex;
 }
 
 /* Checklist */
