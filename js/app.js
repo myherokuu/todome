@@ -2,17 +2,89 @@
 // Simple, no-build-required visual workspace
 
 const BooleyBoard = {
+    currentUser: null,
     currentBoard: null,
     currentWorkspace: null,
     boards: [],
     selectedTool: 'select',
     isMeetingMode: false,
 
+    // Demo credentials
+    validUsers: {
+        'smh': 'abcd1234'
+    },
+
     // Initialize app
     init() {
-        this.loadMockData();
+        this.checkSession();
         this.attachEventHandlers();
-        this.showDashboard();
+    },
+
+    // Check if user is logged in
+    checkSession() {
+        const storedUser = sessionStorage.getItem('boley_user');
+        if (storedUser) {
+            this.currentUser = JSON.parse(storedUser);
+            this.loadUserData();
+            this.showDashboard();
+        } else {
+            this.showLoginPage();
+        }
+    },
+
+    // Show login page
+    showLoginPage() {
+        $('#loginView').show();
+        $('#dashboard').hide();
+        $('#boardView').hide();
+        $('#meetingView').hide();
+    },
+
+    // Handle login
+    handleLogin(email, password) {
+        if (this.validUsers[email] && this.validUsers[email] === password) {
+            this.currentUser = { email, name: email };
+            sessionStorage.setItem('boley_user', JSON.stringify(this.currentUser));
+            this.loadUserData();
+            this.showDashboard();
+            return true;
+        }
+        return false;
+    },
+
+    // Handle logout
+    handleLogout() {
+        if (confirm('Are you sure you want to logout? All unsaved data will be lost.')) {
+            this.currentUser = null;
+            this.currentBoard = null;
+            this.currentWorkspace = null;
+            this.boards = [];
+            sessionStorage.removeItem('boley_user');
+            sessionStorage.removeItem('boley_boards_' + this.currentUser?.email);
+            $('#loginView').show();
+            $('#dashboard').hide();
+            $('#boardView').hide();
+            $('#meetingView').hide();
+            $('#loginForm')[0].reset();
+        }
+    },
+
+    // Load user-specific data
+    loadUserData() {
+        const key = 'boley_boards_' + this.currentUser.email;
+        const stored = sessionStorage.getItem(key);
+        if (stored) {
+            this.boards = JSON.parse(stored);
+        } else {
+            this.loadMockData();
+            this.saveUserData();
+        }
+    },
+
+    // Save user data to session storage
+    saveUserData() {
+        const key = 'boley_boards_' + this.currentUser.email;
+        sessionStorage.setItem(key, JSON.stringify(this.boards));
     },
 
     // Mock data
@@ -194,6 +266,25 @@ NEXT STEPS
 
     // Event handlers
     attachEventHandlers() {
+        // Login handlers
+        $('#loginForm').on('submit', (e) => {
+            e.preventDefault();
+            const email = $('#loginEmail').val().trim();
+            const password = $('#loginPassword').val();
+            if (this.handleLogin(email, password)) {
+                this.init();
+            } else {
+                alert('Invalid credentials. Please try again.\n\nDemo: smh / abcd1234');
+                $('#loginPassword').val('');
+            }
+        });
+
+        // Logout handler
+        $('#logoutBtn').on('click', (e) => {
+            e.preventDefault();
+            this.handleLogout();
+        });
+
         // Dashboard
         $('#createBoardBtn').on('click', () => this.showCreateBoardModal());
         $('#confirmCreateBoard').on('click', () => this.createBoard());
@@ -248,9 +339,13 @@ NEXT STEPS
         this.currentWorkspace = null;
         this.isMeetingMode = false;
 
+        $('#loginView').hide();
         $('#boardView').hide();
         $('#meetingView').hide();
         $('#dashboard').show();
+
+        // Update user display
+        $('#currentUser').text(this.currentUser?.email || 'User');
 
         this.renderBoards();
     },
@@ -574,6 +669,7 @@ NEXT STEPS
         };
 
         this.boards.push(board);
+        this.saveUserData();
         bootstrap.Modal.getInstance($('#createBoardModal')[0]).hide();
 
         $('#boardTitleInput').val('');
@@ -587,6 +683,7 @@ NEXT STEPS
         const board = this.boards.find(b => b.id === boardId);
         if (board) {
             board.isFavorite = !board.isFavorite;
+            this.saveUserData();
             this.renderBoards();
         }
     },

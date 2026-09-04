@@ -10,9 +10,67 @@ body {
     color: #0f172a;
 }
 
-/* Dashboard */
+/* Views */
 .view {
     min-height: 100vh;
+}
+
+/* Login View */
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-box {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.login-header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #667eea;
+    margin: 0;
+}
+
+.login-header p {
+    font-size: 0.9rem;
+}
+
+.login-box .form-label {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.login-box .form-control {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.login-box .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.login-box .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    font-weight: 600;
+}
+
+.login-box .btn-primary:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #6a4095 100%);
 }
 
 .navbar-top {

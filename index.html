@@ -9,6 +9,34 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- Login View -->
+    <div id="loginView" class="view login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1 class="mb-2">⚡ Boley Board</h1>
+                <p class="text-muted">Visual Workspace for Teams</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control form-control-lg" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control form-control-lg" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">Login</button>
+            </form>
+
+            <div class="alert alert-info small mb-0">
+                <strong>Demo Credentials:</strong><br>
+                Email: <code>smh</code><br>
+                Password: <code>abcd1234</code>
+            </div>
+        </div>
+    </div>
+
     <!-- Dashboard View -->
     <div id="dashboard" class="view">
         <div class="navbar-top">
@@ -18,9 +46,19 @@
                         <h1 class="h2 mb-0">⚡ Boley Board</h1>
                         <p class="text-muted small">Your visual workspace for meetings and collaboration</p>
                     </div>
-                    <button class="btn btn-primary btn-lg" id="createBoardBtn">
-                        <i class="fas fa-plus"></i> Create Board
-                    </button>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary btn-lg" id="createBoardBtn">
+                            <i class="fas fa-plus"></i> Create Board
+                        </button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary" type="button" id="userMenu">
+                                <i class="fas fa-user-circle"></i> <span id="currentUser">User</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                                <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
