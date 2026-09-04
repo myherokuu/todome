@@ -41,9 +41,9 @@ const BooleyBoard = {
     },
 
     // Handle login
-    handleLogin(email, password) {
-        if (this.validUsers[email] && this.validUsers[email] === password) {
-            this.currentUser = { email, name: email };
+    handleLogin(username, password) {
+        if (this.validUsers[username] && this.validUsers[username] === password) {
+            this.currentUser = { username, name: username };
             sessionStorage.setItem('boley_user', JSON.stringify(this.currentUser));
             this.loadUserData();
             this.showDashboard();
@@ -55,12 +55,15 @@ const BooleyBoard = {
     // Handle logout
     handleLogout() {
         if (confirm('Are you sure you want to logout? All unsaved data will be lost.')) {
+            const username = this.currentUser?.username;
             this.currentUser = null;
             this.currentBoard = null;
             this.currentWorkspace = null;
             this.boards = [];
             sessionStorage.removeItem('boley_user');
-            sessionStorage.removeItem('boley_boards_' + this.currentUser?.email);
+            if (username) {
+                sessionStorage.removeItem('boley_boards_' + username);
+            }
             $('#loginView').show();
             $('#dashboard').hide();
             $('#boardView').hide();
@@ -71,7 +74,7 @@ const BooleyBoard = {
 
     // Load user-specific data
     loadUserData() {
-        const key = 'boley_boards_' + this.currentUser.email;
+        const key = 'boley_boards_' + this.currentUser.username;
         const stored = sessionStorage.getItem(key);
         if (stored) {
             this.boards = JSON.parse(stored);
@@ -83,7 +86,7 @@ const BooleyBoard = {
 
     // Save user data to session storage
     saveUserData() {
-        const key = 'boley_boards_' + this.currentUser.email;
+        const key = 'boley_boards_' + this.currentUser.username;
         sessionStorage.setItem(key, JSON.stringify(this.boards));
     },
 
@@ -269,13 +272,14 @@ NEXT STEPS
         // Login handlers
         $('#loginForm').on('submit', (e) => {
             e.preventDefault();
-            const email = $('#loginEmail').val().trim();
+            const username = $('#loginUsername').val().trim();
             const password = $('#loginPassword').val();
-            if (this.handleLogin(email, password)) {
+            if (this.handleLogin(username, password)) {
                 this.init();
             } else {
                 alert('Invalid credentials. Please try again.\n\nDemo: smh / abcd1234');
                 $('#loginPassword').val('');
+                $('#loginUsername').focus();
             }
         });
 

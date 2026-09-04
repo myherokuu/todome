@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
     <title>Boley Board - Visual Workspace</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -19,19 +22,19 @@
 
             <form id="loginForm">
                 <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control form-control-lg" id="loginEmail" placeholder="Enter your email" required>
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control form-control-lg" id="loginUsername" placeholder="Enter username" required autocomplete="username">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password</label>
-                    <input type="password" class="form-control form-control-lg" id="loginPassword" placeholder="Enter your password" required>
+                    <input type="password" class="form-control form-control-lg" id="loginPassword" placeholder="Enter password" required autocomplete="current-password">
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">Login</button>
             </form>
 
             <div class="alert alert-info small mb-0">
                 <strong>Demo Credentials:</strong><br>
-                Email: <code>smh</code><br>
+                Username: <code>smh</code><br>
                 Password: <code>abcd1234</code>
             </div>
         </div>
