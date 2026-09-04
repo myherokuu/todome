@@ -1,0 +1,598 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+/* Dashboard */
+.view {
+    min-height: 100vh;
+}
+
+.navbar-top {
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.board-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.board-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: #3b82f6;
+}
+
+.board-card h5 {
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.board-card p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 12px;
+}
+
+.board-meta {
+    display: flex;
+    gap: 12px;
+    margin: 12px 0;
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+
+.board-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.badge-workspace {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.favorite-btn {
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1.2rem;
+}
+
+.favorite-btn.active {
+    color: #fbbf24;
+}
+
+.favorite-btn:hover {
+    color: #fbbf24;
+}
+
+/* Board View */
+.board-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: #1e293b;
+    color: white;
+}
+
+.board-topbar {
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    padding: 12px 16px;
+    z-index: 50;
+}
+
+.board-topbar .form-control {
+    background: transparent;
+    border: 1px solid #475569;
+    color: white;
+}
+
+.board-topbar .form-control:focus {
+    background: transparent;
+    border-color: #3b82f6;
+    color: white;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.board-workspace {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.board-toolbar {
+    width: 64px;
+    background: #0f172a;
+    border-right: 1px solid #334155;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 0;
+    gap: 8px;
+    overflow-y: auto;
+}
+
+.tool-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 1.2rem;
+}
+
+.tool-btn:hover {
+    background: #334155;
+    color: white;
+}
+
+.tool-btn.active {
+    background: #3b82f6;
+    color: white;
+}
+
+.canvas-area {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.workspace-tabs {
+    background: #334155;
+    border-bottom: 1px solid #475569;
+    display: flex;
+    gap: 8px;
+    padding: 8px 16px;
+    overflow-x: auto;
+}
+
+.workspace-tab {
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #475569;
+    color: #cbd5e1;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.workspace-tab:hover {
+    background: #64748b;
+}
+
+.workspace-tab.active {
+    background: #3b82f6;
+    color: white;
+}
+
+.canvas-content {
+    flex: 1;
+    background: #1e293b;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Whiteboard Canvas */
+.whiteboard-canvas {
+    width: 100%;
+    height: 100%;
+    background: #0f172a;
+    cursor: crosshair;
+}
+
+/* Checklist */
+.checklist-container {
+    padding: 32px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.checklist-header {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.progress-bar {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    height: 8px;
+    margin-top: 12px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    background: white;
+    height: 100%;
+    transition: width 0.3s;
+}
+
+.checklist-items {
+    background: #334155;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.checklist-item {
+    padding: 16px;
+    border-bottom: 1px solid #475569;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.checklist-item:last-child {
+    border-bottom: none;
+}
+
+.checklist-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.checklist-item.completed {
+    opacity: 0.7;
+}
+
+.checklist-item.completed .item-title {
+    text-decoration: line-through;
+    color: #94a3b8;
+}
+
+.item-content {
+    flex: 1;
+}
+
+.item-title {
+    font-weight: 500;
+    color: white;
+    margin-bottom: 4px;
+}
+
+.item-meta {
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    display: flex;
+    gap: 8px;
+}
+
+.priority-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.priority-high {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.priority-medium {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.priority-low {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* Kanban Board */
+.kanban-container {
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+    overflow-x: auto;
+    height: 100%;
+}
+
+.kanban-column {
+    flex: 0 0 320px;
+    background: #334155;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.column-header {
+    background: #475569;
+    padding: 16px;
+    border-bottom: 1px solid #64748b;
+    font-weight: 600;
+}
+
+.column-cards {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.kanban-card {
+    background: white;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: grab;
+    border-left: 4px solid;
+    transition: all 0.2s;
+}
+
+.kanban-card:active {
+    cursor: grabbing;
+}
+
+.kanban-card.priority-high {
+    border-left-color: #ef4444;
+}
+
+.kanban-card.priority-medium {
+    border-left-color: #f59e0b;
+}
+
+.kanban-card.priority-low {
+    border-left-color: #10b981;
+}
+
+.kanban-card-title {
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.kanban-card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+/* Mind Map */
+.mindmap-canvas {
+    width: 100%;
+    height: 100%;
+    background: #0f172a;
+}
+
+/* Meeting Notes */
+.meeting-notes {
+    padding: 32px;
+    max-width: 900px;
+    margin: auto;
+    color: white;
+}
+
+.notes-content {
+    background: #334155;
+    padding: 24px;
+    border-radius: 12px;
+    white-space: pre-wrap;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* Meeting Mode */
+.meeting-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: white;
+}
+
+.meeting-header {
+    background: linear-gradient(135deg, #1e3a8a, #4c1d95);
+    padding: 48px;
+    text-align: center;
+    border-bottom: 2px solid #3b82f6;
+}
+
+.meeting-header h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.meeting-info {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    font-size: 1.1rem;
+    color: #bfdbfe;
+}
+
+.meeting-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.meeting-content > div {
+    max-width: 1000px;
+    width: 100%;
+}
+
+.meeting-nav {
+    background: #0f172a;
+    border-top: 1px solid #334155;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dot-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #475569;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dot-indicator.active {
+    background: #3b82f6;
+    width: 32px;
+    border-radius: 6px;
+}
+
+/* Template Grid */
+.template-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.template-card {
+    padding: 24px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.template-card:hover {
+    border-color: #3b82f6;
+    background: #f0f9ff;
+}
+
+.template-card.selected {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.template-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.template-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #475569;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .board-toolbar {
+        width: 52px;
+        padding: 8px 0;
+        gap: 4px;
+    }
+
+    .tool-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1rem;
+    }
+
+    .meeting-header {
+        padding: 24px;
+    }
+
+    .meeting-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .meeting-info {
+        flex-direction: column;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
+
+    .kanban-container {
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .kanban-column {
+        flex: 0 0 280px;
+    }
+}
+
+/* Utility */
+.gap-2 {
+    gap: 8px;
+}
+
+.gap-3 {
+    gap: 12px;
+}
+
+.gap-4 {
+    gap: 16px;
+}
+
+.mb-3 {
+    margin-bottom: 12px;
+}
+
+.mb-4 {
+    margin-bottom: 16px;
+}
+
+.mb-5 {
+    margin-bottom: 24px;
+}
+
+.py-4 {
+    padding: 16px 0;
+}
+
+.py-5 {
+    padding: 32px 0;
+}

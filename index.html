@@ -1,13 +1,190 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boley Board - Visual Workspace</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Dashboard View -->
+    <div id="dashboard" class="view">
+        <div class="navbar-top">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center py-4">
+                    <div>
+                        <h1 class="h2 mb-0">⚡ Boley Board</h1>
+                        <p class="text-muted small">Your visual workspace for meetings and collaboration</p>
+                    </div>
+                    <button class="btn btn-primary btn-lg" id="createBoardBtn">
+                        <i class="fas fa-plus"></i> Create Board
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid py-5">
+            <!-- Favorites Section -->
+            <div id="favoritesSection" class="mb-5" style="display: none;">
+                <h3 class="mb-4"><i class="fas fa-star"></i> Favorites</h3>
+                <div id="favoriteBoards" class="row g-4"></div>
+            </div>
+
+            <!-- Recent Boards Section -->
+            <div class="mb-5">
+                <h3 class="mb-4"><i class="fas fa-history"></i> Recent Boards</h3>
+                <div id="recentBoards" class="row g-4"></div>
+            </div>
+
+            <!-- All Boards Section -->
+            <div>
+                <h3 class="mb-4"><i class="fas fa-layer-group"></i> All Boards</h3>
+                <div id="allBoards" class="row g-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Board View -->
+    <div id="boardView" class="view" style="display: none;">
+        <div class="board-container">
+            <!-- Top Bar -->
+            <div class="board-topbar">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-sm btn-outline-light" id="backBtn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <input type="text" class="form-control form-control-sm board-title" id="boardTitle" style="width: 300px;">
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-light" id="meetingModeBtn" title="Meeting Mode">
+                            <i class="fas fa-eye"></i> Meeting
+                        </button>
+                        <button class="btn btn-sm btn-outline-light" id="shareBtn" title="Share">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-light" id="exportBtn" title="Export">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-light" id="settingsBtn" title="Settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="board-workspace">
+                <!-- Left Toolbar -->
+                <div class="board-toolbar">
+                    <button class="tool-btn active" data-tool="select" title="Select"><i class="fas fa-arrow-pointer"></i></button>
+                    <button class="tool-btn" data-tool="pen" title="Pen"><i class="fas fa-pen"></i></button>
+                    <button class="tool-btn" data-tool="text" title="Text"><i class="fas fa-font"></i></button>
+                    <button class="tool-btn" data-tool="sticky" title="Sticky Note"><i class="fas fa-sticky-note"></i></button>
+                    <button class="tool-btn" data-tool="rectangle" title="Rectangle"><i class="fas fa-square"></i></button>
+                    <button class="tool-btn" data-tool="circle" title="Circle"><i class="fas fa-circle"></i></button>
+                    <button class="tool-btn" data-tool="arrow" title="Arrow"><i class="fas fa-arrow-right"></i></button>
+                    <button class="tool-btn" data-tool="checklist" title="Checklist"><i class="fas fa-list-check"></i></button>
+                    <button class="tool-btn" data-tool="kanban" title="Kanban"><i class="fas fa-columns"></i></button>
+                    <button class="tool-btn" data-tool="mindmap" title="Mind Map"><i class="fas fa-code-branch"></i></button>
+                </div>
+
+                <!-- Main Canvas Area -->
+                <div class="canvas-area">
+                    <!-- Workspace Tabs -->
+                    <div class="workspace-tabs" id="workspaceTabs"></div>
+
+                    <!-- Canvas Content -->
+                    <div class="canvas-content" id="canvasContent">
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-plus fa-3x mb-3"></i>
+                            <p>Select a workspace or create a new one</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meeting Mode View -->
+    <div id="meetingView" class="view" style="display: none;">
+        <div class="meeting-container">
+            <div class="meeting-header">
+                <h1 id="meetingTitle"></h1>
+                <div class="meeting-info">
+                    <span><i class="fas fa-calendar"></i> <span id="meetingDate"></span></span>
+                    <span><i class="fas fa-clock"></i> <span id="meetingTime"></span></span>
+                </div>
+            </div>
+            <div class="meeting-content" id="meetingContent"></div>
+            <div class="meeting-nav">
+                <button class="btn btn-light" id="prevWorkspace"><i class="fas fa-chevron-left"></i> Previous</button>
+                <div id="dotIndicators"></div>
+                <button class="btn btn-light" id="nextWorkspace">Next <i class="fas fa-chevron-right"></i></button>
+                <button class="btn btn-danger" id="exitMeetingBtn"><i class="fas fa-times"></i> Exit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Board Modal -->
+    <div class="modal fade" id="createBoardModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Board</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Board Title *</label>
+                        <input type="text" class="form-control" id="boardTitleInput" placeholder="e.g., Q4 Product Roadmap">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" id="boardDescInput" rows="3" placeholder="Describe the purpose of this board..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Template</label>
+                        <div class="template-grid">
+                            <div class="template-card" data-template="blank">
+                                <div class="template-icon">📝</div>
+                                <div class="template-name">Blank Whiteboard</div>
+                            </div>
+                            <div class="template-card" data-template="meeting">
+                                <div class="template-icon">📅</div>
+                                <div class="template-name">Meeting</div>
+                            </div>
+                            <div class="template-card" data-template="project">
+                                <div class="template-icon">📊</div>
+                                <div class="template-name">Project Planning</div>
+                            </div>
+                            <div class="template-card" data-template="kanban">
+                                <div class="template-icon">📋</div>
+                                <div class="template-name">Kanban</div>
+                            </div>
+                            <div class="template-card" data-template="brainstorm">
+                                <div class="template-icon">💡</div>
+                                <div class="template-name">Brainstorming</div>
+                            </div>
+                            <div class="template-card" data-template="checklist">
+                                <div class="template-icon">✓</div>
+                                <div class="template-name">Checklist</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmCreateBoard">Create Board</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
 </html>
